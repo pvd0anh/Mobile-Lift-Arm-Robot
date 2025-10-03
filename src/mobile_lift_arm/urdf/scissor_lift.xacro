@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="scissor_lift" params="parent lift_height_min:=0.0 lift_height_max:=1.2 top_size_xy:=0.5 top_thickness:=0.05">
+    <!-- Moving table (top platform) -->
+    <link name="lift_link">
+      <inertial>
+        <origin xyz="0 0 ${top_thickness/2}" rpy="0 0 0"/>
+        <mass value="8.0"/>
+        <inertia ixx="0.08" ixy="0" ixz="0" iyy="0.08" iyz="0" izz="0.08"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 ${top_thickness/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${top_size_xy} ${top_size_xy} ${top_thickness}"/>
+        </geometry>
+        <material name="blue"><color rgba="0.2 0.3 0.9 1"/></material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${top_thickness/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${top_size_xy} ${top_size_xy} ${top_thickness}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Prismatic joint to simulate lift -->
+    <joint name="lift_joint" type="prismatic">
+      <parent link="${parent}"/>
+      <child link="lift_link"/>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${lift_height_min}" upper="${lift_height_max}" effort="500" velocity="0.2"/>
+      <dynamics damping="5.0" friction="0.1"/>
+    </joint>
+
+    <!-- Top link for mounting the arm -->
+    <link name="lift_top_link">
+      <visual>
+        <origin xyz="0 0 ${top_thickness}" rpy="0 0 0"/>
+        <geometry><sphere radius="0.01"/></geometry>
+        <material name="invisible"><color rgba="0 0 0 0"/></material>
+      </visual>
+    </link>
+
+    <joint name="lift_top_fixed" type="fixed">
+      <parent link="lift_link"/>
+      <child link="lift_top_link"/>
+    </joint>
+  </xacro:macro>
+</robot>
