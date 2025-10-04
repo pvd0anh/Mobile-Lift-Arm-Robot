@@ -36,7 +36,13 @@ lift_position_controller:
 
 arm_trajectory_controller:
   ros__parameters:
-    joints: ["arm_shoulder_yaw_joint","arm_shoulder_pitch_joint","arm_elbow_joint"]
+    joints:
+      - arm_shoulder_yaw_joint
+      - arm_shoulder_pitch_joint
+      - arm_shoulder_roll_joint
+      - arm_elbow_pitch_joint
+      - arm_wrist_pitch_joint
+      - arm_wrist_roll_joint
     command_interfaces: ["position"]
     state_interfaces: ["position","velocity"]
     state_publish_rate: 50

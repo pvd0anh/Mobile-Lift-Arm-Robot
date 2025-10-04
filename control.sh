@@ -11,6 +11,10 @@ ros2 topic pub /lift_position_controller/commands std_msgs/Float64MultiArray "da
 # trajectory arm
 ros2 action send_goal /arm_trajectory_controller/follow_joint_trajectory \
 control_msgs/action/FollowJointTrajectory \
-'{trajectory: {joint_names: ["arm_shoulder_yaw_joint","arm_shoulder_pitch_joint","arm_elbow_joint"],
-points: [{positions: [0.0, 0.7, -0.5], time_from_start: {sec: 2}},
-         {positions: [1.2, 0.2, 0.8],  time_from_start: {sec: 5}}]}}'
+'{trajectory: {
+    joint_names: ["arm_shoulder_yaw_joint","arm_shoulder_pitch_joint","arm_shoulder_roll_joint",
+                  "arm_elbow_pitch_joint","arm_wrist_pitch_joint","arm_wrist_roll_joint"],
+    points: [
+      {positions: [0.0, 0.6, 0.0,  -0.8, 0.4, 0.0], time_from_start: {sec: 2}},
+      {positions: [1.2, 0.2, -0.4,  0.6, 0.2, 1.0], time_from_start: {sec: 5}}
+    ]}}'

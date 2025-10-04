@@ -43,20 +43,30 @@
       <state_interface name="velocity"/>
     </joint>
 
+    <!-- arm 6DOF -->
     <joint name="arm_shoulder_yaw_joint">
       <command_interface name="position"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
     </joint>
     <joint name="arm_shoulder_pitch_joint">
       <command_interface name="position"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
     </joint>
-    <joint name="arm_elbow_joint">
+    <joint name="arm_shoulder_roll_joint">
       <command_interface name="position"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="arm_elbow_pitch_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="arm_wrist_pitch_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="arm_wrist_roll_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
     </joint>
   </ros2_control>
 </robot>

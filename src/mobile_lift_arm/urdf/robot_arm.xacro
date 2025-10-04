@@ -1,59 +1,211 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Arm 6-DOF with simple geometry and proper inertials -->
   <xacro:macro name="robot_arm" params="parent">
+
+    <!-- Base stub mounted to parent -->
     <link name="arm_base_link">
-      <inertial><mass value="3"/><inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0" ixz="0" iyz="0"/></inertial>
+      <inertial>
+        <origin xyz="0 0 0.05" rpy="0 0 0"/>
+        <mass value="3.0"/>
+        <inertia ixx="0.03" ixy="0" ixz="0" iyy="0.03" iyz="0" izz="0.03"/>
+      </inertial>
       <visual>
         <origin xyz="0 0 0.05" rpy="0 0 0"/>
-        <geometry><cylinder radius="0.06" length="0.1"/></geometry>
+        <geometry><cylinder radius="0.06" length="0.10"/></geometry>
         <material name="orange"><color rgba="0.9 0.5 0.2 1"/></material>
       </visual>
       <collision>
         <origin xyz="0 0 0.05" rpy="0 0 0"/>
-        <geometry><cylinder radius="0.06" length="0.1"/></geometry>
+        <geometry><cylinder radius="0.06" length="0.10"/></geometry>
       </collision>
     </link>
 
     <joint name="arm_base_fixed" type="fixed">
       <parent link="${parent}"/>
       <child link="arm_base_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
-    <link name="arm_shoulder_yaw_link"/>
+    <!-- J1: Shoulder Yaw (Z) -->
+    <link name="arm_shoulder_yaw_link">
+      <inertial>
+        <origin xyz="0 0 0.08" rpy="0 0 0"/>
+        <mass value="2.0"/>
+        <inertia ixx="0.02" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.02"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0.08" rpy="0 0 0"/>
+        <geometry><box size="0.08 0.08 0.16"/></geometry>
+        <material name="orange"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.08" rpy="0 0 0"/>
+        <geometry><box size="0.08 0.08 0.16"/></geometry>
+      </collision>
+    </link>
     <joint name="arm_shoulder_yaw_joint" type="revolute">
       <parent link="arm_base_link"/>
       <child link="arm_shoulder_yaw_link"/>
       <origin xyz="0 0 0.07" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit lower="-3.14" upper="3.14" effort="30" velocity="1.5"/>
-      <dynamics damping="0.3"/>
+      <limit lower="-3.14" upper="3.14" effort="40" velocity="1.5"/>
+      <dynamics damping="0.3" friction="0.1"/>
     </joint>
 
-    <link name="arm_shoulder_pitch_link"/>
+    <!-- J2: Shoulder Pitch (Y), link length ~0.25 -->
+    <link name="arm_shoulder_pitch_link">
+      <inertial>
+        <origin xyz="0 0 0.125" rpy="0 0 0"/>
+        <mass value="2.0"/>
+        <inertia ixx="0.02" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.02"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0.125" rpy="0 0 0"/>
+        <geometry><box size="0.08 0.25 0.08"/></geometry>
+        <material name="orange"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.125" rpy="0 0 0"/>
+        <geometry><box size="0.08 0.25 0.08"/></geometry>
+      </collision>
+    </link>
     <joint name="arm_shoulder_pitch_joint" type="revolute">
       <parent link="arm_shoulder_yaw_link"/>
       <child link="arm_shoulder_pitch_link"/>
-      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <origin xyz="0 0 0.12" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit lower="-1.57" upper="1.57" effort="30" velocity="1.2"/>
-      <dynamics damping="0.3"/>
+      <limit lower="-1.8" upper="1.8" effort="40" velocity="1.2"/>
+      <dynamics damping="0.3" friction="0.1"/>
     </joint>
 
-    <link name="arm_elbow_link"/>
-    <joint name="arm_elbow_joint" type="revolute">
+    <!-- J3: Shoulder Roll (X) -->
+    <link name="arm_shoulder_roll_link">
+      <inertial>
+        <origin xyz="0 0 0.06" rpy="0 0 0"/>
+        <mass value="1.8"/>
+        <inertia ixx="0.018" ixy="0" ixz="0" iyy="0.018" iyz="0" izz="0.018"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0.06" rpy="0 0 0"/>
+        <geometry><box size="0.08 0.12 0.12"/></geometry>
+        <material name="orange"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.06" rpy="0 0 0"/>
+        <geometry><box size="0.08 0.12 0.12"/></geometry>
+      </collision>
+    </link>
+    <joint name="arm_shoulder_roll_joint" type="revolute">
       <parent link="arm_shoulder_pitch_link"/>
-      <child link="arm_elbow_link"/>
-      <origin xyz="0 0 0.125" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <limit lower="-1.57" upper="1.57" effort="20" velocity="1.2"/>
-      <dynamics damping="0.3"/>
+      <child link="arm_shoulder_roll_link"/>
+      <origin xyz="0 0 0.20" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="-2.8" upper="2.8" effort="30" velocity="1.2"/>
+      <dynamics damping="0.3" friction="0.1"/>
     </joint>
 
-    <link name="ee_link"/>
-    <joint name="ee_fixed" type="fixed">
-      <parent link="arm_elbow_link"/>
-      <child link="ee_link"/>
-      <origin xyz="0 0 0.11" rpy="0 0 0"/>
+    <!-- J4: Elbow Pitch (Y), forearm length ~0.22 -->
+    <link name="arm_elbow_link">
+      <inertial>
+        <origin xyz="0 0 0.11" rpy="0 0 0"/>
+        <mass value="1.6"/>
+        <inertia ixx="0.016" ixy="0" ixz="0" iyy="0.016" iyz="0" izz="0.016"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0.11" rpy="0 0 0"/>
+        <geometry><box size="0.06 0.22 0.06"/></geometry>
+        <material name="orange"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.11" rpy="0 0 0"/>
+        <geometry><box size="0.06 0.22 0.06"/></geometry>
+      </collision>
+    </link>
+    <joint name="arm_elbow_pitch_joint" type="revolute">
+      <parent link="arm_shoulder_roll_link"/>
+      <child link="arm_elbow_link"/>
+      <origin xyz="0 0 0.06" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-2.6" upper="2.6" effort="25" velocity="1.2"/>
+      <dynamics damping="0.25" friction="0.08"/>
     </joint>
+
+    <!-- J5: Wrist Pitch (Y) -->
+    <link name="arm_wrist_pitch_link">
+      <inertial>
+        <origin xyz="0 0 0.05" rpy="0 0 0"/>
+        <mass value="1.0"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0.05" rpy="0 0 0"/>
+        <geometry><box size="0.05 0.10 0.05"/></geometry>
+        <material name="orange"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.05" rpy="0 0 0"/>
+        <geometry><box size="0.05 0.10 0.05"/></geometry>
+      </collision>
+    </link>
+    <joint name="arm_wrist_pitch_joint" type="revolute">
+      <parent link="arm_elbow_link"/>
+      <child link="arm_wrist_pitch_link"/>
+      <origin xyz="0 0 0.20" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-2.2" upper="2.2" effort="20" velocity="1.5"/>
+      <dynamics damping="0.2" friction="0.05"/>
+    </joint>
+
+    <!-- J6: Wrist Roll (Z) -->
+    <link name="arm_wrist_roll_link">
+      <inertial>
+        <origin xyz="0 0 0.03" rpy="0 0 0"/>
+        <mass value="0.8"/>
+        <inertia ixx="0.008" ixy="0" ixz="0" iyy="0.008" iyz="0" izz="0.008"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0.03" rpy="0 0 0"/>
+        <geometry><cylinder radius="0.035" length="0.06"/></geometry>
+        <material name="orange"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.03" rpy="0 0 0"/>
+        <geometry><cylinder radius="0.035" length="0.06"/></geometry>
+      </collision>
+    </link>
+    <joint name="arm_wrist_roll_joint" type="revolute">
+      <parent link="arm_wrist_pitch_link"/>
+      <child link="arm_wrist_roll_link"/>
+      <origin xyz="0 0 0.10" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-3.14" upper="3.14" effort="15" velocity="1.8"/>
+      <dynamics damping="0.15" friction="0.04"/>
+    </joint>
+
+    <!-- End-effector (dummy) -->
+    <link name="ee_link">
+      <inertial>
+        <origin xyz="0 0 0.03" rpy="0 0 0"/>
+        <mass value="0.3"/>
+        <inertia ixx="0.003" ixy="0" ixz="0" iyy="0.003" iyz="0" izz="0.003"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0.03" rpy="0 0 0"/>
+        <geometry><sphere radius="0.03"/></geometry>
+        <material name="orange"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.03" rpy="0 0 0"/>
+        <geometry><sphere radius="0.03"/></geometry>
+      </collision>
+    </link>
+    <joint name="ee_fixed" type="fixed">
+      <parent link="arm_wrist_roll_link"/>
+      <child link="ee_link"/>
+      <origin xyz="0 0 0.06" rpy="0 0 0"/>
+    </joint>
+
   </xacro:macro>
 </robot>
