@@ -37,5 +37,9 @@
       <parent link="lift_link"/>
       <child link="lift_top_link"/>
     </joint>
+
+    <gazebo reference="lift_link">
+      <mu1>0.9</mu1><mu2>0.9</mu2>
+    </gazebo>
   </xacro:macro>
 </robot>

@@ -16,6 +16,8 @@
   <!-- Gazebo ros2_control -->
   <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <!-- ép namespace khớp với -entity -->
+      <robotNamespace>/mobile_lift_arm</robotNamespace>
       <parameters>$(find mobile_lift_arm)/config/ros2_controllers.yaml</parameters>
     </plugin>
   </gazebo>

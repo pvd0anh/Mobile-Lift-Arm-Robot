@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- Properties cố định để tránh lỗi tham số -->
+  <!-- Kích thước chuẩn -->
   <xacro:property name="BASE_LENGTH" value="0.8"/>
   <xacro:property name="BASE_WIDTH"  value="0.6"/>
   <xacro:property name="BASE_HEIGHT" value="0.15"/>
@@ -8,6 +8,7 @@
   <xacro:property name="WHEEL_THICK"  value="0.05"/>
 
   <xacro:macro name="base_vehicle" params="">
+    <!-- Thân xe -->
     <link name="base_link">
       <inertial>
         <origin xyz="0 0 ${BASE_HEIGHT/2}" rpy="0 0 0"/>
@@ -16,45 +17,44 @@
       </inertial>
       <visual>
         <origin xyz="0 0 ${BASE_HEIGHT/2}" rpy="0 0 0"/>
-        <geometry>
-          <box size="${BASE_LENGTH} ${BASE_WIDTH} ${BASE_HEIGHT}"/>
-        </geometry>
+        <geometry><box size="${BASE_LENGTH} ${BASE_WIDTH} ${BASE_HEIGHT}"/></geometry>
         <material name="gray"><color rgba="0.5 0.5 0.5 1"/></material>
       </visual>
       <collision>
         <origin xyz="0 0 ${BASE_HEIGHT/2}" rpy="0 0 0"/>
-        <geometry>
-          <box size="${BASE_LENGTH} ${BASE_WIDTH} ${BASE_HEIGHT}"/>
-        </geometry>
+        <geometry><box size="${BASE_LENGTH} ${BASE_WIDTH} ${BASE_HEIGHT}"/></geometry>
       </collision>
     </link>
 
+    <!-- Bánh trái: frame bánh = child frame của joint, đặt visual/collision ở (0,0,0) -->
     <link name="left_wheel_link">
       <inertial><mass value="2"/><inertia ixx="0.02" iyy="0.02" izz="0.02" ixy="0" ixz="0" iyz="0"/></inertial>
       <visual>
-        <origin xyz="0 ${BASE_WIDTH/2 + WHEEL_THICK/2} ${WHEEL_RADIUS}" rpy="0 1.5708 0"/>
+        <origin xyz="0 0 0" rpy="0 1.5708 0"/>
         <geometry><cylinder radius="${WHEEL_RADIUS}" length="${WHEEL_THICK}"/></geometry>
         <material name="black"><color rgba="0.1 0.1 0.1 1"/></material>
       </visual>
       <collision>
-        <origin xyz="0 ${BASE_WIDTH/2 + WHEEL_THICK/2} ${WHEEL_RADIUS}" rpy="0 1.5708 0"/>
+        <origin xyz="0 0 0" rpy="0 1.5708 0"/>
         <geometry><cylinder radius="${WHEEL_RADIUS}" length="${WHEEL_THICK}"/></geometry>
       </collision>
     </link>
 
+    <!-- Bánh phải -->
     <link name="right_wheel_link">
       <inertial><mass value="2"/><inertia ixx="0.02" iyy="0.02" izz="0.02" ixy="0" ixz="0" iyz="0"/></inertial>
       <visual>
-        <origin xyz="0 -${BASE_WIDTH/2 + WHEEL_THICK/2} ${WHEEL_RADIUS}" rpy="0 1.5708 0"/>
+        <origin xyz="0 0 0" rpy="0 1.5708 0"/>
         <geometry><cylinder radius="${WHEEL_RADIUS}" length="${WHEEL_THICK}"/></geometry>
         <material name="black"><color rgba="0.1 0.1 0.1 1"/></material>
       </visual>
       <collision>
-        <origin xyz="0 -${BASE_WIDTH/2 + WHEEL_THICK/2} ${WHEEL_RADIUS}" rpy="0 1.5708 0"/>
+        <origin xyz="0 0 0" rpy="0 1.5708 0"/>
         <geometry><cylinder radius="${WHEEL_RADIUS}" length="${WHEEL_THICK}"/></geometry>
       </collision>
     </link>
 
+    <!-- Joint đặt vị trí bánh: ±y và z = bán kính -->
     <joint name="left_wheel_joint" type="continuous">
       <parent link="base_link"/>
       <child link="left_wheel_link"/>
@@ -70,5 +70,16 @@
       <axis xyz="0 1 0"/>
       <limit effort="10" velocity="20"/>
     </joint>
+
+    <!-- Ma sát để bánh bám sàn -->
+    <gazebo reference="left_wheel_link">
+      <mu1>1.2</mu1><mu2>1.2</mu2>
+    </gazebo>
+    <gazebo reference="right_wheel_link">
+      <mu1>1.2</mu1><mu2>1.2</mu2>
+    </gazebo>
+    <gazebo reference="base_link">
+      <mu1>0.8</mu1><mu2>0.8</mu2>
+    </gazebo>
   </xacro:macro>
 </robot>
