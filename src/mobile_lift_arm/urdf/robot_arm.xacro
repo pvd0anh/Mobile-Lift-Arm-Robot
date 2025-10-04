@@ -15,14 +15,7 @@
       <child link="arm_base_link"/>
     </joint>
 
-    <!-- Joint 1: shoulder yaw -->
-    <link name="arm_shoulder_yaw_link">
-      <inertial><mass value="2"/><inertia ixx="0.02" iyy="0.02" izz="0.02" ixy="0" ixz="0" iyz="0"/></inertial>
-      <visual>
-        <geometry><box size="0.08 0.08 0.15"/></geometry>
-        <material name="orange"/>
-      </visual>
-    </link>
+    <link name="arm_shoulder_yaw_link"/>
     <joint name="arm_shoulder_yaw_joint" type="revolute">
       <parent link="arm_base_link"/>
       <child link="arm_shoulder_yaw_link"/>
@@ -32,14 +25,7 @@
       <dynamics damping="0.3"/>
     </joint>
 
-    <!-- Joint 2: shoulder pitch -->
-    <link name="arm_shoulder_pitch_link">
-      <inertial><mass value="2"/><inertia ixx="0.02" iyy="0.02" izz="0.02" ixy="0" ixz="0" iyz="0"/></inertial>
-      <visual>
-        <geometry><box size="0.08 0.25 0.08"/></geometry>
-        <material name="orange"/>
-      </visual>
-    </link>
+    <link name="arm_shoulder_pitch_link"/>
     <joint name="arm_shoulder_pitch_joint" type="revolute">
       <parent link="arm_shoulder_yaw_link"/>
       <child link="arm_shoulder_pitch_link"/>
@@ -49,14 +35,7 @@
       <dynamics damping="0.3"/>
     </joint>
 
-    <!-- Joint 3: elbow -->
-    <link name="arm_elbow_link">
-      <inertial><mass value="1.5"/><inertia ixx="0.015" iyy="0.015" izz="0.015" ixy="0" ixz="0" iyz="0"/></inertial>
-      <visual>
-        <geometry><box size="0.06 0.22 0.06"/></geometry>
-        <material name="orange"/>
-      </visual>
-    </link>
+    <link name="arm_elbow_link"/>
     <joint name="arm_elbow_joint" type="revolute">
       <parent link="arm_shoulder_pitch_link"/>
       <child link="arm_elbow_link"/>
@@ -66,15 +45,7 @@
       <dynamics damping="0.3"/>
     </joint>
 
-    <!-- Simple end-effector -->
-    <link name="ee_link">
-      <inertial><mass value="0.5"/><inertia ixx="0.005" iyy="0.005" izz="0.005" ixy="0" ixz="0" iyz="0"/></inertial>
-      <visual>
-        <origin xyz="0 0 0.12" rpy="0 0 0"/>
-        <geometry><sphere radius="0.03"/></geometry>
-        <material name="orange"/>
-      </visual>
-    </link>
+    <link name="ee_link"/>
     <joint name="ee_fixed" type="fixed">
       <parent link="arm_elbow_link"/>
       <child link="ee_link"/>

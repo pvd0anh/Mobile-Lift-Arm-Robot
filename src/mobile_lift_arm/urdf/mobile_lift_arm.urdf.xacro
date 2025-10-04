@@ -1,33 +1,29 @@
 <?xml version="1.0"?>
 <robot name="mobile_lift_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- Include modules -->
   <xacro:include filename="$(find mobile_lift_arm)/urdf/base_vehicle.xacro"/>
   <xacro:include filename="$(find mobile_lift_arm)/urdf/scissor_lift.xacro"/>
   <xacro:include filename="$(find mobile_lift_arm)/urdf/robot_arm.xacro"/>
 
   <!-- Base -->
-  <xacro:base_vehicle prefix=""/>
+  <xacro:base_vehicle/>
 
-  <!-- Lift mounted on base_link -->
+  <!-- Lift gắn trên base_link -->
   <xacro:scissor_lift parent="base_link"/>
 
-  <!-- 3-DOF Arm mounted on lift top -->
+  <!-- Arm gắn trên lift_top_link -->
   <xacro:robot_arm parent="lift_top_link"/>
 
-  <!-- Gazebo-ros2-control plugin -->
+  <!-- Gazebo ros2_control -->
   <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
       <parameters>$(find mobile_lift_arm)/config/ros2_controllers.yaml</parameters>
     </plugin>
   </gazebo>
 
-  <!-- ros2_control interface -->
+  <!-- ros2_control -->
   <ros2_control name="GazeboSystem" type="system">
-    <hardware>
-      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-    </hardware>
+    <hardware><plugin>gazebo_ros2_control/GazeboSystem</plugin></hardware>
 
-    <!-- diff drive joints (velocity cmd) -->
     <joint name="left_wheel_joint">
       <command_interface name="velocity"/>
       <state_interface name="position"/>
@@ -39,14 +35,12 @@
       <state_interface name="velocity"/>
     </joint>
 
-    <!-- lift prismatic (position cmd) -->
     <joint name="lift_joint">
       <command_interface name="position"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
 
-    <!-- arm (position cmd via trajectory controller) -->
     <joint name="arm_shoulder_yaw_joint">
       <command_interface name="position"/>
       <state_interface name="position"/>
@@ -63,10 +57,4 @@
       <state_interface name="velocity"/>
     </joint>
   </ros2_control>
-
-  <!-- Gazebo material friction etc. -->
-  <gazebo reference="base_link">
-    <kp>500000.0</kp>
-    <kd>10.0</kd>
-  </gazebo>
 </robot>
