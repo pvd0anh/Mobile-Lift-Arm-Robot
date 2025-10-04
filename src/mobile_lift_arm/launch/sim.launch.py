@@ -42,7 +42,7 @@ def generate_launch_description():
         arguments=['joint_state_broadcaster', '--controller-manager', cm],
         output='screen'
     )
-    diff = Node(sửa
+    diff = Node(
         package='controller_manager', executable='spawner',
         arguments=['diff_drive_base_controller', '--controller-manager', cm],
         output='screen'
