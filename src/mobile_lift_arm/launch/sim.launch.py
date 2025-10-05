@@ -21,13 +21,13 @@ def generate_launch_description():
         ),
         launch_arguments={'world': world}.items()
     )
-    robot_description_content = Command(['xacro ', urdf_xacro])
-    robot_description = ParameterValue(robot_description_content, value_type=str)
+    _robot_description_content = Command(['xacro ', urdf_xacro])
+    _robot_description = ParameterValue(_robot_description_content, value_type=str)
     robot_state_pub = Node(
         package='robot_state_publisher', executable='robot_state_publisher',
         name='robot_state_publisher', output='screen',
         parameters=[{'use_sim_time': True,
-                     'robot_description': robot_description}]
+                     'robot_description': _robot_description}]
     )
 
     spawn_entity = Node(
