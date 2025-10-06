@@ -2,12 +2,12 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="tricycle_base">
 
   <!-- Dimensions and parameters -->
-  <xacro:property name="BASE_LENGTH" value="0.8"/>   <!-- body length (x) -->
-  <xacro:property name="BASE_WIDTH"  value="0.6"/>   <!-- body width (y) -->
-  <xacro:property name="BASE_HEIGHT" value="0.15"/>  <!-- body height (z) -->
+  <xacro:property name="BASE_LENGTH" value="0.6"/>   <!-- body length (x) -->
+  <xacro:property name="BASE_WIDTH"  value="0.4"/>   <!-- body width (y) -->
+  <xacro:property name="BASE_HEIGHT" value="0.1"/>  <!-- body height (z) -->
   <xacro:property name="WHEEL_RADIUS" value="0.1"/>
   <xacro:property name="WHEEL_THICK"  value="0.05"/>
-  <xacro:property name="CLEARANCE"    value="0.02"/> <!-- ground clearance -->
+  <xacro:property name="CLEARANCE"    value="0.12"/> <!-- ground clearance -->
 
   <!-- Tricycle specific parameters -->
   <xacro:property name="REAR_WHEEL_SEPARATION" value="${BASE_WIDTH * 0.8}"/>  <!-- Distance between rear wheels -->
