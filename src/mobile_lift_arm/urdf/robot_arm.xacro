@@ -43,7 +43,7 @@
     </visual>
 </link>
 
-<joint name="arm_j1" type="revolute">
+<joint name="arm_shoulder_yaw_joint" type="revolute">
     <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
     <parent link="arm_l0"/>
     <child link="arm_l1"/>
@@ -110,7 +110,7 @@
     </visual>
 </link>
 
-<joint name="arm_j2" type="revolute">
+<joint name="arm_shoulder_pitch_joint" type="revolute">
     <origin xyz="0.25 0.0 0.0" rpy="0.0 ${pi/2} 0.0"/>
     <parent link="arm_l2"/>
     <child link="arm_l3"/>
@@ -145,7 +145,7 @@
     </visual>
 </link>
 
-<joint name="arm_j3" type="revolute">
+<joint name="arm_shoulder_roll_joint" type="revolute">
     <origin xyz="-0.30 0.0 0.0" rpy="0.0 0.0 0.0"/>
     <parent link="arm_l3"/>
     <child link="arm_l4"/>
@@ -216,7 +216,7 @@
     </visual>
 </link>
 
-<joint name="arm_j4" type="revolute">
+<joint name="arm_elbow_pitch_joint" type="revolute">
     <origin xyz="-0.32 0.0 0.0" rpy="0.0 0.0 0.0"/>
     <parent link="arm_l5"/>
     <child link="arm_l6"/>
@@ -252,7 +252,7 @@
     </visual>
 </link>
 
-<joint name="arm_j5" type="revolute">
+<joint name="arm_wrist_pitch_joint" type="revolute">
     <origin xyz="0.0 0.0 0.25" rpy="0.0 ${-pi/2} ${2*pi}"/>
     <parent link="arm_l6"/>
     <child link="arm_le"/>
@@ -288,7 +288,7 @@
     </visual>
 </link>
 
-<joint name="arm_j6" type="revolute">
+<joint name="arm_wrist_roll_joint" type="revolute">
     <origin xyz="0.0 0.0 0.18" rpy="0.0 ${pi/2} 0.0"/>
     <parent link="arm_le"/>
     <child link="arm_le_1"/>
