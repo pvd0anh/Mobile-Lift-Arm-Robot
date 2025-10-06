@@ -322,9 +322,9 @@
     </visual>
 </link>
 
-    <!-- Mount to parent (e.g., lift_top_link) -->
+    <!-- Mount the arm on the given parent -->
     <joint name="arm_base_mount" type="fixed">
-      <parent link="{parent}"/>
+      <parent link="${parent}"/>
       <child link="arm_base_link"/>
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
