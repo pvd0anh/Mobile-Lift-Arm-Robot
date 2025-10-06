@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<robot name="mobile_lift_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find mobile_lift_arm)/urdf/base_vehicle.xacro"/>
+  <xacro:include filename="$(find mobile_lift_arm)/urdf/scissor_lift.xacro"/>
+  <xacro:include filename="$(find mobile_lift_arm)/urdf/robot_arm.xacro"/>
+
+  <!-- Base -->
+  <xacro:base_vehicle/>
+
+  <!-- Lift gắn trên base_link -->
+  <xacro:scissor_lift parent="base_link"/>
+
+  <!-- Arm gắn trên lift_top_link -->
+  <xacro:robot_arm parent="lift_top_link"/>
+
+  <!-- Gazebo ros2_control -->
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <!-- ép namespace khớp với -entity -->
+      <robotNamespace>/mobile_lift_arm</robotNamespace>
+      <parameters>$(find mobile_lift_arm)/config/ros2_controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- ros2_control -->
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware><plugin>gazebo_ros2_control/GazeboSystem</plugin></hardware>
+
+    <joint name="left_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="right_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="lift_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- arm 6DOF -->
+    <joint name="arm_shoulder_yaw_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="arm_shoulder_pitch_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="arm_shoulder_roll_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="arm_elbow_pitch_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="arm_wrist_pitch_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="arm_wrist_roll_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+</robot>
