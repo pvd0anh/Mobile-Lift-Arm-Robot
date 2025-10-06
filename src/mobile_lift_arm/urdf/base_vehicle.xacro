@@ -1,37 +1,36 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mobile_base">
 
-  <!-- Kích thước & tham số -->
-  <xacro:property name="BASE_LENGTH" value="0.8"/>   <!-- dọc thân xe (x) -->
-  <xacro:property name="BASE_WIDTH"  value="0.6"/>   <!-- ngang thân xe (y) -->
-  <xacro:property name="BASE_HEIGHT" value="0.15"/>  <!-- cao thân (z) -->
+  <!-- Dimensions and parameters -->
+  <xacro:property name="BASE_LENGTH" value="0.8"/>   <!-- body length (x) -->
+  <xacro:property name="BASE_WIDTH"  value="0.6"/>   <!-- body width (y) -->
+  <xacro:property name="BASE_HEIGHT" value="0.15"/>  <!-- body height (z) -->
   <xacro:property name="WHEEL_RADIUS" value="0.1"/>
   <xacro:property name="WHEEL_THICK"  value="0.05"/>
-  <xacro:property name="CLEARANCE"    value="0.02"/> <!-- hở gầm nếu cần -->
+  <xacro:property name="CLEARANCE"    value="0.02"/> <!-- ground clearance -->
 
-  <!-- Tham số điều khiển (để dùng plugin/controller sau) -->
+  <!-- Control parameters -->
   <xacro:property name="WHEEL_SEPARATION" value="${BASE_WIDTH}"/>
   <xacro:property name="WHEEL_BASE"       value="${BASE_LENGTH * 0.8}"/>
 
-  <!-- Khối lượng (có thể chỉnh theo thực tế) -->
+  <!-- Mass properties -->
   <xacro:property name="M_BASE"  value="20.0"/>
   <xacro:property name="M_WHEEL" value="2.0"/>
 
-  <!-- Tính quán tính gần đúng -->
-  <!-- Hộp: Ixx = 1/12 m (y^2 + z^2), v.v. -->
+  <!-- Inertia calculations -->
+  <!-- Box: Ixx = 1/12 m (y^2 + z^2), etc. -->
   <xacro:property name="Ixx_base" value="${(M_BASE/12.0) * (BASE_WIDTH*BASE_WIDTH + BASE_HEIGHT*BASE_HEIGHT)}"/>
   <xacro:property name="Iyy_base" value="${(M_BASE/12.0) * (BASE_LENGTH*BASE_LENGTH + BASE_HEIGHT*BASE_HEIGHT)}"/>
   <xacro:property name="Izz_base" value="${(M_BASE/12.0) * (BASE_LENGTH*BASE_LENGTH + BASE_WIDTH*BASE_WIDTH)}"/>
 
-  <!-- Cylinder bánh: Ixx=Iyy=1/12 m (3r^2 + L^2), Izz=1/2 m r^2 (khi trục cylinder là z) -->
-  <!-- Ta xoay cylinder để trục hình học trùng trục y, nhưng giá trị quán tính vẫn tính theo công thức chuẩn rồi để Gazebo/ROS quy đổi theo rpy -->
+  <!-- Cylinder wheel: Ixx=Iyy=1/12 m (3r^2 + L^2), Izz=1/2 m r^2 -->
   <xacro:property name="Ixx_w" value="${(M_WHEEL/12.0) * (3*WHEEL_RADIUS*WHEEL_RADIUS + WHEEL_THICK*WHEEL_THICK)}"/>
   <xacro:property name="Iyy_w" value="${(M_WHEEL/2.0)  * (WHEEL_RADIUS*WHEEL_RADIUS)}"/>
   <xacro:property name="Izz_w" value="${(M_WHEEL/12.0) * (3*WHEEL_RADIUS*WHEEL_RADIUS + WHEEL_THICK*WHEEL_THICK)}"/>
 
   <xacro:macro name="base_vehicle" params="">
 
-    <!-- Chuẩn frame sàn -->
+    <!-- Standard floor frame -->
     <link name="base_footprint"/>
     <joint name="base_footprint_joint" type="fixed">
       <parent link="base_footprint"/>
@@ -39,7 +38,7 @@
       <origin xyz="0 0 ${BASE_HEIGHT/2 + CLEARANCE}" rpy="0 0 0"/>
     </joint>
 
-    <!-- Thân xe -->
+    <!-- Vehicle body -->
     <link name="base_link">
       <inertial>
         <origin xyz="0 0 ${BASE_HEIGHT/2}" rpy="0 0 0"/>
@@ -71,7 +70,7 @@
       </collision>
     </link>
 
-    <!-- Bánh trái -->
+    <!-- Left wheel -->
     <link name="left_wheel_link">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -80,7 +79,7 @@
       </inertial>
 
       <visual>
-        <!-- Xoay quanh trục X 90° để trục hình học cylinder (z) trùng với trục y (trục quay của bánh) -->
+        <!-- Rotate around X axis 90° to align cylinder axis (z) with y axis (wheel rotation axis) -->
         <origin xyz="0 0 0" rpy="1.5708 0 0"/>
         <geometry>
           <cylinder radius="${WHEEL_RADIUS}" length="${WHEEL_THICK}"/>
@@ -104,7 +103,7 @@
       </collision>
     </link>
 
-    <!-- Bánh phải (mirror) -->
+    <!-- Right wheel (mirror) -->
     <link name="right_wheel_link">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -136,7 +135,7 @@
       </collision>
     </link>
 
-    <!-- Joint bánh: trục quay dọc y -->
+    <!-- Wheel joints: rotation axis along y -->
     <joint name="left_wheel_joint" type="continuous">
       <parent link="base_link"/>
       <child  link="left_wheel_link"/>
