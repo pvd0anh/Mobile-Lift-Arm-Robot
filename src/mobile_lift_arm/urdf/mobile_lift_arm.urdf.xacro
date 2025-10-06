@@ -1,14 +1,115 @@
 <?xml version="1.0"?>
 <robot name="mobile_lift_arm"
   xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
   <xacro:include filename="$(find mobile_lift_arm)/urdf/base_vehicle.xacro"/>
   <xacro:include filename="$(find mobile_lift_arm)/urdf/scissor_lift.xacro"/>
   <xacro:include filename="$(find mobile_lift_arm)/urdf/robot_arm.xacro"/>
-<!-- Base -->
+
+  <!-- Base -->
   <xacro:base_vehicle/>
 
   <!-- Lift gắn trên base_link -->
   <xacro:scissor_lift parent="base_link"/>
-  <!-- arm joints conditional -->
-</ros2_control>
+
+  <!-- Arm gắn trên lift_top_link -->
+  <xacro:robot_arm parent="lift_top_link"/>
+
+  <!-- ros2_control definition -->
+  <ros2_control name="mobile_lift_arm_system" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    <!-- Base wheels -->
+    <joint name="left_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max">10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="right_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max">10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- Lift joint -->
+    <joint name="lift_joint">
+      <command_interface name="position">
+        <param name="min">0.0</param>
+        <param name="max">1.2</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- Arm joints -->
+    <joint name="arm_j1">
+      <command_interface name="position">
+        <param name="min">-6.28</param>
+        <param name="max">6.28</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="arm_j2">
+      <command_interface name="position">
+        <param name="min">-1.57</param>
+        <param name="max">1.57</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="arm_j3">
+      <command_interface name="position">
+        <param name="min">-1.57</param>
+        <param name="max">1.57</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="arm_j4">
+      <command_interface name="position">
+        <param name="min">-1.57</param>
+        <param name="max">1.57</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="arm_j5">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="arm_j6">
+      <command_interface name="position">
+        <param name="min">-6.28</param>
+        <param name="max">6.28</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <!-- Gazebo ros2_control plugin -->
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>$(find mobile_lift_arm)/config/ros2_controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
 </robot>
