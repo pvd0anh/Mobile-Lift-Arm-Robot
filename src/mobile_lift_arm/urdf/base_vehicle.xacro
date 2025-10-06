@@ -2,25 +2,25 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="tricycle_base">
 
   <!-- Dimensions and parameters -->
-  <xacro:property name="BASE_LENGTH" value="0.6"/>   <!-- body length (x) -->
-  <xacro:property name="BASE_WIDTH"  value="0.4"/>   <!-- body width (y) -->
-  <xacro:property name="BASE_HEIGHT" value="0.1"/>  <!-- body height (z) -->
-  <xacro:property name="WHEEL_RADIUS" value="0.1"/>
-  <xacro:property name="WHEEL_THICK"  value="0.05"/>
-  <xacro:property name="CLEARANCE"    value="0.12"/> <!-- ground clearance -->
+  <xacro:property name="BASE_LENGTH" value="0.8"/>   <!-- body length (x) -->
+  <xacro:property name="BASE_WIDTH"  value="0.5"/>   <!-- body width (y) -->
+  <xacro:property name="BASE_HEIGHT" value="0.15"/>  <!-- body height (z) -->
+  <xacro:property name="WHEEL_RADIUS" value="0.15"/>
+  <xacro:property name="WHEEL_THICK"  value="0.08"/>
+  <xacro:property name="CLEARANCE"    value="0.18"/> <!-- ground clearance -->
 
   <!-- Tricycle specific parameters -->
-  <xacro:property name="REAR_WHEEL_SEPARATION" value="${BASE_WIDTH * 0.8}"/>  <!-- Distance between rear wheels -->
-  <xacro:property name="WHEELBASE" value="${BASE_LENGTH * 0.65}"/>            <!-- Distance from front to rear axle -->
+  <xacro:property name="REAR_WHEEL_SEPARATION" value="${BASE_WIDTH * 0.9}"/>  <!-- Distance between rear wheels -->
+  <xacro:property name="WHEELBASE" value="${BASE_LENGTH * 0.7}"/>            <!-- Distance from front to rear axle -->
   <xacro:property name="FRONT_WHEEL_OFFSET" value="${WHEELBASE/2}"/>          <!-- Front wheel position -->
   <xacro:property name="REAR_WHEEL_OFFSET" value="${-WHEELBASE/2}"/>          <!-- Rear wheels position -->
 
   <!-- Steering limits -->
-  <xacro:property name="MAX_STEER_ANGLE" value="0.7854"/>  <!-- 45 degrees in radians -->
+  <xacro:property name="MAX_STEER_ANGLE" value="1.0472"/>  <!-- 60 degrees in radians -->
 
   <!-- Mass properties -->
-  <xacro:property name="M_BASE"  value="20.0"/>
-  <xacro:property name="M_WHEEL" value="2.0"/>
+  <xacro:property name="M_BASE"  value="35.0"/>
+  <xacro:property name="M_WHEEL" value="3.5"/>
   <xacro:property name="M_STEER" value="1.0"/>  <!-- Steering assembly mass -->
 
   <!-- Inertia calculations -->
@@ -104,8 +104,8 @@
         <surface>
           <friction>
             <ode>
-              <mu>1.2</mu>
-              <mu2>1.2</mu2>
+              <mu>1.5</mu>
+              <mu2>1.5</mu2>
             </ode>
           </friction>
         </surface>
@@ -136,8 +136,8 @@
         <surface>
           <friction>
             <ode>
-              <mu>1.2</mu>
-              <mu2>1.2</mu2>
+              <mu>1.5</mu>
+              <mu2>1.5</mu2>
             </ode>
           </friction>
         </surface>
@@ -192,8 +192,8 @@
         <surface>
           <friction>
             <ode>
-              <mu>1.0</mu>
-              <mu2>1.0</mu2>
+              <mu>1.2</mu>
+              <mu2>1.2</mu2>
             </ode>
           </friction>
         </surface>
@@ -204,7 +204,7 @@
     <joint name="left_rear_wheel_joint" type="continuous">
       <parent link="base_link"/>
       <child  link="left_rear_wheel_link"/>
-      <origin xyz="${REAR_WHEEL_OFFSET} ${REAR_WHEEL_SEPARATION/2} ${WHEEL_RADIUS + CLEARANCE}" rpy="0 0 0"/>
+      <origin xyz="${REAR_WHEEL_OFFSET} ${REAR_WHEEL_SEPARATION/2} -${BASE_HEIGHT/2 + CLEARANCE - WHEEL_RADIUS}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
       <limit effort="15" velocity="25"/>
       <dynamics damping="0.2" friction="0.1"/>
@@ -213,22 +213,20 @@
     <joint name="right_rear_wheel_joint" type="continuous">
       <parent link="base_link"/>
       <child  link="right_rear_wheel_link"/>
-      <origin xyz="${REAR_WHEEL_OFFSET} -${REAR_WHEEL_SEPARATION/2} ${WHEEL_RADIUS + CLEARANCE}" rpy="0 0 0"/>
+      <origin xyz="${REAR_WHEEL_OFFSET} -${REAR_WHEEL_SEPARATION/2} -${BASE_HEIGHT/2 + CLEARANCE - WHEEL_RADIUS}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
       <limit effort="15" velocity="25"/>
       <dynamics damping="0.2" friction="0.1"/>
     </joint>
-
     <!-- FRONT STEERING JOINT - Revolute with limits -->
     <joint name="front_steer_joint" type="revolute">
       <parent link="base_link"/>
       <child  link="front_steer_link"/>
-      <origin xyz="${FRONT_WHEEL_OFFSET} 0 ${WHEEL_RADIUS + CLEARANCE}" rpy="0 0 0"/>
+      <origin xyz="${FRONT_WHEEL_OFFSET} 0 -${BASE_HEIGHT/2 + CLEARANCE - WHEEL_RADIUS}" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit lower="-${MAX_STEER_ANGLE}" upper="${MAX_STEER_ANGLE}" effort="10" velocity="2"/>
       <dynamics damping="0.5" friction="0.2"/>
     </joint>
-
     <!-- FRONT WHEEL JOINT - Continuous rotation, mounted on steering assembly -->
     <joint name="front_wheel_joint" type="continuous">
       <parent link="front_steer_link"/>
