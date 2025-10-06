@@ -1,5 +1,9 @@
 # Twist
-ros2 topic pub /diff_drive_base_controller/cmd_vel geometry_msgs/Twist "{linear: {x: 0.5}, angular: {z: 0.3}}"
+ros2 topic pub /tricycle_drive_controller/cmd_vel geometry_msgs/Twist \
+"{linear: {x: 0.5}, angular: {z: 0.0}}"
+
+ros2 topic pub /tricycle_drive_controller/cmd_vel geometry_msgs/Twist \
+"{linear: {x: 0.3}, angular: {z: 0.5}}"
 
 # prismatic
 # Set position (m) cho lift_joint qua group position controller
