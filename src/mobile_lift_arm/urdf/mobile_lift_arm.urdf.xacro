@@ -9,10 +9,10 @@
   <!-- Base -->
   <xacro:base_vehicle/>
 
-  <!-- Lift gắn trên base_link -->
+  <!-- Lift mounted on base_link -->
   <xacro:scissor_lift parent="base_link"/>
 
-  <!-- Arm gắn trên lift_top_link -->
+  <!-- Arm mounted on lift_top_link -->
   <xacro:robot_arm parent="lift_top_link"/>
 
   <!-- ros2_control definition -->
