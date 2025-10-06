@@ -51,7 +51,7 @@
     </joint>
 
     <!-- Arm joints -->
-    <joint name="arm_j1">
+    <joint name="arm_shoulder_yaw_joint">
       <command_interface name="position">
         <param name="min">-6.28</param>
         <param name="max">6.28</param>
@@ -60,7 +60,7 @@
       <state_interface name="velocity"/>
     </joint>
 
-    <joint name="arm_j2">
+    <joint name="arm_shoulder_pitch_joint">
       <command_interface name="position">
         <param name="min">-1.57</param>
         <param name="max">1.57</param>
@@ -69,7 +69,7 @@
       <state_interface name="velocity"/>
     </joint>
 
-    <joint name="arm_j3">
+    <joint name="arm_shoulder_roll_joint">
       <command_interface name="position">
         <param name="min">-1.57</param>
         <param name="max">1.57</param>
@@ -78,7 +78,7 @@
       <state_interface name="velocity"/>
     </joint>
 
-    <joint name="arm_j4">
+    <joint name="arm_elbow_pitch_joint">
       <command_interface name="position">
         <param name="min">-1.57</param>
         <param name="max">1.57</param>
@@ -87,7 +87,7 @@
       <state_interface name="velocity"/>
     </joint>
 
-    <joint name="arm_j5">
+    <joint name="arm_wrist_pitch_joint">
       <command_interface name="position">
         <param name="min">-3.14</param>
         <param name="max">3.14</param>
@@ -96,7 +96,7 @@
       <state_interface name="velocity"/>
     </joint>
 
-    <joint name="arm_j6">
+    <joint name="arm_wrist_roll_joint">
       <command_interface name="position">
         <param name="min">-6.28</param>
         <param name="max">6.28</param>
