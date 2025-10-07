@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Inertia macros -->
+  <xacro:macro name="box_inertia" params="m x y z">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia 
+        ixx="${m/12 * (y*y + z*z)}" ixy="0" ixz="0"
+        iyy="${m/12 * (x*x + z*z)}" iyz="0"
+        izz="${m/12 * (x*x + y*y)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="cylinder_inertia" params="m l r">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia 
+        ixx="${m/12 * (3*r*r + l*l)}" ixy="0" ixz="0"
+        iyy="${m/12 * (3*r*r + l*l)}" iyz="0"
+        izz="${m/2 * r*r}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Scissor arm macro -->
+  <xacro:macro name="scissor_arm" params="name parent xyz rpy">
+    <link name="${name}">
+      <visual>
+        <geometry>
+          <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
+        </geometry>
+        <material name="scissor_material">
+          <color rgba="0.8 0.8 0.8 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
+        </geometry>
+      </collision>
+      <xacro:box_inertia m="5" x="${scissor_arm_length}" y="${scissor_arm_width}" z="${scissor_arm_height}"/>
+    </link>
+
+    <joint name="${name}_joint" type="revolute">
+      <parent link="${parent}"/>
+      <child link="${name}"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
+      <dynamics damping="5" friction="1"/>
+    </joint>
+  </xacro:macro>
+
+</robot>
