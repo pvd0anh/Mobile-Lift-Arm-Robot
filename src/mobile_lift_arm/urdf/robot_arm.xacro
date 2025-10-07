@@ -329,4 +329,16 @@
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
   </xacro:macro>
+  <gazebo reference="arm_base_link">
+  <collision_name>arm_base_collision</collision_name>
+  <surface>
+    <contact>
+      <ode>
+        <max_contacts>10</max_contacts>
+        <max_correcting_vel>0.1</max_correcting_vel>
+      </ode>
+    </contact>
+  </surface>
+</gazebo>
+
 </robot>

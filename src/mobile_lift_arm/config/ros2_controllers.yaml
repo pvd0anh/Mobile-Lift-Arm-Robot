@@ -17,17 +17,16 @@ controller_manager:
 
 tricycle_drive_controller:
   ros__parameters:
-    # Tricycle configuration
+    # Sửa tên joints cho đúng
     front_wheel_names: ["front_wheel_joint"]
     rear_wheel_names: ["left_rear_wheel_joint", "right_rear_wheel_joint"] 
     front_steering_names: ["front_steer_joint"]
     
-    # Physical parameters
-    wheel_separation: 0.48  # Distance between rear wheels
-    wheelbase: 0.52         # Distance from front to rear axle
-    wheel_radius: 0.1
+    # Physical parameters (đã có trong config cũ)
+    wheel_separation: 0.45  # Từ REAR_WHEEL_SEPARATION trong URDF
+    wheelbase: 0.56         # Từ WHEELBASE trong URDF  
+    wheel_radius: 0.15      # Từ WHEEL_RADIUS trong URDF
     
-    # Control parameters
     use_stamped_vel: false
     publish_rate: 50
     base_frame_id: base_link
@@ -35,22 +34,21 @@ tricycle_drive_controller:
     enable_odom_tf: true
     cmd_vel_timeout: 0.5
     
-    # Steering limits
     front_steering:
-      max_position: 0.7854   # 45 degrees
-      min_position: -0.7854  # -45 degrees
+      max_position: 1.0472   # 60 degrees từ MAX_STEER_ANGLE
+      min_position: -1.0472
 
 lift_position_controller:
   ros__parameters:
     joints: ["lift_joint"]
     command_interfaces: ["position"]
-    state_interfaces: ["position","velocity"]
+    state_interfaces: ["position", "velocity"]
 
 arm_trajectory_controller:
   ros__parameters:
     joints: ["arm_shoulder_yaw_joint","arm_shoulder_pitch_joint","arm_shoulder_roll_joint",
              "arm_elbow_pitch_joint","arm_wrist_pitch_joint","arm_wrist_roll_joint"]
     command_interfaces: ["position"]
-    state_interfaces: ["position","velocity"]
+    state_interfaces: ["position", "velocity"]
     state_publish_rate: 50
     action_monitor_rate: 20

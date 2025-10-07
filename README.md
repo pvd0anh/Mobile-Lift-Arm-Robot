@@ -80,7 +80,7 @@ Use the `control.sh` script or direct ROS 2 commands:
 ### Mobile Base Movement
 
 ```bash
-ros2 topic pub /diff_drive_base_controller/cmd_vel geometry_msgs/Twist \
+ros2 topic pub /tricycle_drive_controller/cmd_vel geometry_msgs/Twist \
 "{linear: {x: 0.5}, angular: {z: 0.3}}"
 ```
 
