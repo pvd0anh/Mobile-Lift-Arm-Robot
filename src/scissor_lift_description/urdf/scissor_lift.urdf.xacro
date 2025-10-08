@@ -90,11 +90,11 @@
     <xacro:box_inertia m="5" x="${scissor_arm_length}" y="${scissor_arm_width}" z="${scissor_arm_height}"/>
   </link>
 
-  <!-- Joint connecting lower left to upper left arm (scissor crossing point) -->
+  <!-- Joint connecting lower left to upper left arm (scissor crossing point) - FIXED: centered -->
   <joint name="left_cross_joint" type="revolute">
     <parent link="lower_left_arm"/>
     <child link="upper_left_arm"/>
-    <origin xyz="${scissor_arm_length/3} 0 0"/>
+    <origin xyz="${scissor_arm_length/2} 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
     <dynamics damping="5" friction="0.5"/>
@@ -143,11 +143,48 @@
     <xacro:box_inertia m="5" x="${scissor_arm_length}" y="${scissor_arm_width}" z="${scissor_arm_height}"/>
   </link>
 
-  <!-- Joint connecting lower right to upper right arm (scissor crossing point) -->
+  <!-- Joint connecting lower right to upper right arm (scissor crossing point) - FIXED: centered -->
   <joint name="right_cross_joint" type="revolute">
     <parent link="lower_right_arm"/>
     <child link="upper_right_arm"/>
-    <origin xyz="-${scissor_arm_length/3} 0 0"/>
+    <origin xyz="${scissor_arm_length/2} 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
+    <dynamics damping="5" friction="0.5"/>
+  </joint>
+
+  <!-- Cross connection between the two lower arms for structural integrity -->
+  <link name="cross_connector">
+    <visual>
+      <geometry>
+        <box size="0.05 ${base_width/2} 0.05"/>
+      </geometry>
+      <material name="dark_grey">
+        <color rgba="0.3 0.3 0.3 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.05 ${base_width/2} 0.05"/>
+      </geometry>
+    </collision>
+    <xacro:box_inertia m="2" x="0.05" y="${base_width/2}" z="0.05"/>
+  </link>
+
+  <!-- Connect cross connector to both lower arms -->
+  <joint name="cross_left_connector" type="revolute">
+    <parent link="lower_left_arm"/>
+    <child link="cross_connector"/>
+    <origin xyz="${scissor_arm_length/3} ${base_width/4} 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
+    <dynamics damping="5" friction="0.5"/>
+  </joint>
+
+  <joint name="cross_right_connector" type="revolute">
+    <parent link="lower_right_arm"/>
+    <child link="cross_connector"/>
+    <origin xyz="${scissor_arm_length/3} -${base_width/4} 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
     <dynamics damping="5" friction="0.5"/>
@@ -171,11 +208,21 @@
     <xacro:box_inertia m="20" x="${platform_length}" y="${platform_width}" z="${platform_height}"/>
   </link>
 
-  <!-- Connect platform to upper arms -->
+  <!-- Connect platform to both upper arms for stability -->
   <joint name="platform_left_joint" type="revolute">
     <parent link="upper_left_arm"/>
     <child link="platform"/>
-    <origin xyz="${scissor_arm_length/2 - platform_length/4} 0 ${scissor_arm_height/2 + platform_height/2}"/>
+    <origin xyz="${scissor_arm_length/2 - platform_length/4} ${base_width/4} ${scissor_arm_height/2 + platform_height/2}"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
+    <dynamics damping="10" friction="1"/>
+  </joint>
+
+  <!-- ADDED: Connect platform to right arm for structural integrity -->
+  <joint name="platform_right_joint" type="revolute">
+    <parent link="upper_right_arm"/>
+    <child link="platform"/>
+    <origin xyz="${scissor_arm_length/2 - platform_length/4} -${base_width/4} ${scissor_arm_height/2 + platform_height/2}"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
     <dynamics damping="10" friction="1"/>
@@ -237,10 +284,10 @@
     <dynamics damping="50" friction="5"/>
   </joint>
 
-  <!-- Connect hydraulic piston to scissor mechanism -->
+  <!-- FIXED: Connect hydraulic piston to cross connector for symmetric force distribution -->
   <joint name="piston_scissor_joint" type="revolute">
     <parent link="hydraulic_piston"/>
-    <child link="lower_left_arm"/>
+    <child link="cross_connector"/>
     <origin xyz="0 0 0.15" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
@@ -273,6 +320,10 @@
 
   <gazebo reference="hydraulic_piston">
     <material>Gazebo/Orange</material>
+  </gazebo>
+
+  <gazebo reference="cross_connector">
+    <material>Gazebo/Black</material>
   </gazebo>
 
   <!-- ROS2 Control transmission -->
