@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <robot name="scissor_lift" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <!-- Include properties and macros -->
+  <!-- Include macros for inertia -->
   <xacro:include filename="$(find scissor_lift_description)/urdf/scissor_lift_macros.xacro"/>
+
+  <!-- World link for a fixed reference frame -->
   <link name="world"/>
 
   <!-- Parameters -->
@@ -21,330 +23,165 @@
   <!-- Base Link -->
   <link name="base_link">
     <visual>
-      <geometry>
-        <box size="${base_length} ${base_width} ${base_height}"/>
-      </geometry>
-      <material name="grey">
-        <color rgba="0.5 0.5 0.5 1"/>
-      </material>
+      <geometry><box size="${base_length} ${base_width} ${base_height}"/></geometry>
+      <material name="grey"><color rgba="0.5 0.5 0.5 1"/></material>
     </visual>
     <collision>
-      <geometry>
-        <box size="${base_length} ${base_width} ${base_height}"/>
-      </geometry>
+      <geometry><box size="${base_length} ${base_width} ${base_height}"/></geometry>
     </collision>
     <xacro:box_inertia m="100" x="${base_length}" y="${base_width}" z="${base_height}"/>
   </link>
 
-  <!-- Fixed joint to world -->
   <joint name="base_joint" type="fixed">
     <parent link="world"/>
     <child link="base_link"/>
-    <origin xyz="0 0 ${base_height/2}"/>
+    <origin xyz="0 0 ${base_height/2}" rpy="0 0 0"/>
   </joint>
 
-  <!-- Scissor mechanism - Left side -->
-  <!-- Lower left scissor arm -->
+  <!-- === Left Side === -->
   <link name="lower_left_arm">
     <visual>
-      <geometry>
-        <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
-      </geometry>
-      <material name="blue">
-        <color rgba="0 0 1 1"/>
-      </material>
+      <geometry><box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/></geometry>
+      <material name="blue"><color rgba="0 0 1 1"/></material>
     </visual>
     <collision>
-      <geometry>
-        <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
-      </geometry>
+      <geometry><box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/></geometry>
     </collision>
     <xacro:box_inertia m="5" x="${scissor_arm_length}" y="${scissor_arm_width}" z="${scissor_arm_height}"/>
   </link>
 
-  <!-- Joint connecting base to lower left arm -->
   <joint name="lower_left_joint" type="revolute">
     <parent link="base_link"/>
     <child link="lower_left_arm"/>
-    <origin xyz="-${base_length/4} -${base_width/4} ${base_height/2 + scissor_arm_height/2}"/>
+    <origin xyz="-${scissor_arm_length/2} -${base_width/4} ${base_height/2}"/>
     <axis xyz="0 1 0"/>
-    <limit lower="0.1" upper="1.4" effort="1000" velocity="2"/>
-    <dynamics damping="10" friction="1"/>
+    <limit lower="0.0" upper="1.57" effort="1000" velocity="2"/>
   </joint>
 
-  <!-- Upper left scissor arm -->
   <link name="upper_left_arm">
     <visual>
-      <geometry>
-        <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
-      </geometry>
-      <material name="red">
-        <color rgba="1 0 0 1"/>
-      </material>
+      <geometry><box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/></geometry>
+      <material name="red"><color rgba="1 0 0 1"/></material>
     </visual>
     <collision>
-      <geometry>
-        <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
-      </geometry>
+      <geometry><box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/></geometry>
     </collision>
     <xacro:box_inertia m="5" x="${scissor_arm_length}" y="${scissor_arm_width}" z="${scissor_arm_height}"/>
   </link>
 
-  <!-- Joint connecting lower left to upper left arm (scissor crossing point) - FIXED: centered -->
   <joint name="left_cross_joint" type="revolute">
     <parent link="lower_left_arm"/>
     <child link="upper_left_arm"/>
-    <origin xyz="${scissor_arm_length/2} 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
-    <dynamics damping="5" friction="0.5"/>
   </joint>
 
-  <!-- Scissor mechanism - Right side -->
-  <!-- Lower right scissor arm -->
+  <!-- === Right Side === -->
   <link name="lower_right_arm">
     <visual>
-      <geometry>
-        <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
-      </geometry>
+      <geometry><box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/></geometry>
       <material name="blue"/>
     </visual>
     <collision>
-      <geometry>
-        <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
-      </geometry>
+      <geometry><box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/></geometry>
     </collision>
     <xacro:box_inertia m="5" x="${scissor_arm_length}" y="${scissor_arm_width}" z="${scissor_arm_height}"/>
   </link>
 
-  <!-- Joint connecting base to lower right arm -->
   <joint name="lower_right_joint" type="revolute">
     <parent link="base_link"/>
     <child link="lower_right_arm"/>
-    <origin xyz="${base_length/4} -${base_width/4} ${base_height/2 + scissor_arm_height/2}"/>
+    <origin xyz="-${scissor_arm_length/2} ${base_width/4} ${base_height/2}"/>
     <axis xyz="0 1 0"/>
-    <limit lower="0.1" upper="1.4" effort="1000" velocity="2"/>
-    <dynamics damping="10" friction="1"/>
+    <limit lower="0.0" upper="1.57" effort="1000" velocity="2"/>
   </joint>
 
-  <!-- Upper right scissor arm -->
   <link name="upper_right_arm">
     <visual>
-      <geometry>
-        <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
-      </geometry>
+      <geometry><box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/></geometry>
       <material name="red"/>
     </visual>
     <collision>
-      <geometry>
-        <box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/>
-      </geometry>
+      <geometry><box size="${scissor_arm_length} ${scissor_arm_width} ${scissor_arm_height}"/></geometry>
     </collision>
     <xacro:box_inertia m="5" x="${scissor_arm_length}" y="${scissor_arm_width}" z="${scissor_arm_height}"/>
   </link>
 
-  <!-- Joint connecting lower right to upper right arm (scissor crossing point) - FIXED: centered -->
   <joint name="right_cross_joint" type="revolute">
     <parent link="lower_right_arm"/>
     <child link="upper_right_arm"/>
-    <origin xyz="${scissor_arm_length/2} 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
-    <dynamics damping="5" friction="0.5"/>
   </joint>
 
-  <!-- Cross connection between the two lower arms for structural integrity -->
-  <link name="cross_connector">
-    <visual>
-      <geometry>
-        <box size="0.05 ${base_width/2} 0.05"/>
-      </geometry>
-      <material name="dark_grey">
-        <color rgba="0.3 0.3 0.3 1"/>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <box size="0.05 ${base_width/2} 0.05"/>
-      </geometry>
-    </collision>
-    <xacro:box_inertia m="2" x="0.05" y="${base_width/2}" z="0.05"/>
-  </link>
-
-  <!-- Connect cross connector to both lower arms -->
-  <joint name="cross_left_connector" type="revolute">
-    <parent link="lower_left_arm"/>
-    <child link="cross_connector"/>
-    <origin xyz="${scissor_arm_length/3} ${base_width/4} 0"/>
-    <axis xyz="0 1 0"/>
-    <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
-    <dynamics damping="5" friction="0.5"/>
-  </joint>
-
-  <joint name="cross_right_connector" type="revolute">
-    <parent link="lower_right_arm"/>
-    <child link="cross_connector"/>
-    <origin xyz="${scissor_arm_length/3} -${base_width/4} 0"/>
-    <axis xyz="0 1 0"/>
-    <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
-    <dynamics damping="5" friction="0.5"/>
-  </joint>
-
-  <!-- Platform -->
+  <!-- === Platform === -->
   <link name="platform">
     <visual>
-      <geometry>
-        <box size="${platform_length} ${platform_width} ${platform_height}"/>
-      </geometry>
-      <material name="green">
-        <color rgba="0 1 0 1"/>
-      </material>
+      <geometry><box size="${platform_length} ${platform_width} ${platform_height}"/></geometry>
+      <material name="green"><color rgba="0 1 0 1"/></material>
     </visual>
     <collision>
-      <geometry>
-        <box size="${platform_length} ${platform_width} ${platform_height}"/>
-      </geometry>
+      <geometry><box size="${platform_length} ${platform_width} ${platform_height}"/></geometry>
     </collision>
     <xacro:box_inertia m="20" x="${platform_length}" y="${platform_width}" z="${platform_height}"/>
   </link>
 
-  <!-- Connect platform to both upper arms for stability -->
   <joint name="platform_left_joint" type="revolute">
     <parent link="upper_left_arm"/>
     <child link="platform"/>
-    <origin xyz="${scissor_arm_length/2 - platform_length/4} ${base_width/4} ${scissor_arm_height/2 + platform_height/2}"/>
+    <origin xyz="${scissor_arm_length/2} 0 ${platform_height/2}"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
-    <dynamics damping="10" friction="1"/>
   </joint>
 
-  <!-- ADDED: Connect platform to right arm for structural integrity -->
-  <joint name="platform_right_joint" type="revolute">
-    <parent link="upper_right_arm"/>
-    <child link="platform"/>
-    <origin xyz="${scissor_arm_length/2 - platform_length/4} -${base_width/4} ${scissor_arm_height/2 + platform_height/2}"/>
-    <axis xyz="0 1 0"/>
-    <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
-    <dynamics damping="10" friction="1"/>
+  <joint name="platform_right_joint" type="fixed">
+    <parent link="platform"/>
+    <child link="upper_right_arm"/>
+    <origin xyz="0 -${base_width/2} 0" rpy="0 0 0"/>
   </joint>
 
-  <!-- Hydraulic Cylinder -->
-  <link name="hydraulic_cylinder">
-    <visual>
-      <geometry>
-        <cylinder length="${cylinder_length}" radius="${cylinder_radius}"/>
-      </geometry>
-      <material name="yellow">
-        <color rgba="1 1 0 1"/>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder length="${cylinder_length}" radius="${cylinder_radius}"/>
-      </geometry>
-    </collision>
-    <xacro:cylinder_inertia m="8" l="${cylinder_length}" r="${cylinder_radius}"/>
-  </link>
+  <!-- === Hydraulic Actuator === -->
+  <link name="piston_actuator_link"/>
 
-  <!-- Hydraulic piston -->
-  <link name="hydraulic_piston">
-    <visual>
-      <geometry>
-        <cylinder length="0.3" radius="${cylinder_radius*0.8}"/>
-      </geometry>
-      <material name="orange">
-        <color rgba="1 0.5 0 1"/>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder length="0.3" radius="${cylinder_radius*0.8}"/>
-      </geometry>
-    </collision>
-    <xacro:cylinder_inertia m="3" l="0.3" r="${cylinder_radius*0.8}"/>
-  </link>
-
-  <!-- Hydraulic cylinder to base -->
-  <joint name="cylinder_base_joint" type="revolute">
-    <parent link="base_link"/>
-    <child link="hydraulic_cylinder"/>
-    <origin xyz="0 0 ${base_height/2 + cylinder_length/2}"/>
-    <axis xyz="0 1 0"/>
-    <limit lower="-0.5" upper="0.5" effort="500" velocity="1"/>
-    <dynamics damping="20" friction="2"/>
-  </joint>
-
-  <!-- Hydraulic piston (prismatic joint for extension) -->
   <joint name="hydraulic_actuator" type="prismatic">
-    <parent link="hydraulic_cylinder"/>
-    <child link="hydraulic_piston"/>
-    <origin xyz="0 0 ${cylinder_length/2 + 0.15}"/>
-    <axis xyz="0 0 1"/>
-    <limit lower="0" upper="0.6" effort="5000" velocity="0.5"/>
-    <dynamics damping="50" friction="5"/>
+    <parent link="base_link"/>
+    <child link="piston_actuator_link"/>
+    <origin xyz="0 0 ${base_height/2}" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-${scissor_arm_length/2}" upper="${scissor_arm_length/2}" effort="5000" velocity="0.5"/>
   </joint>
 
-  <!-- FIXED: Connect hydraulic piston to cross connector for symmetric force distribution -->
-  <joint name="piston_scissor_joint" type="revolute">
-    <parent link="hydraulic_piston"/>
-    <child link="cross_connector"/>
-    <origin xyz="0 0 0.15" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
-    <dynamics damping="10" friction="1"/>
+  <joint name="actuator_to_left_arm" type="revolute">
+      <parent link="piston_actuator_link"/>
+      <child link="lower_left_arm"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-3.14" upper="3.14" effort="1000" velocity="2"/>
   </joint>
 
-  <!-- Gazebo-specific tags for simulation -->
+  <!-- Gazebo specific tags -->
   <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
       <parameters>$(find scissor_lift_description)/config/scissor_lift_controllers.yaml</parameters>
     </plugin>
   </gazebo>
 
-  <!-- Add gazebo materials -->
-  <gazebo reference="base_link">
-    <material>Gazebo/Grey</material>
-    <mu1>0.8</mu1>
-    <mu2>0.8</mu2>
-  </gazebo>
+  <!-- Materials for Gazebo -->
+  <gazebo reference="base_link"><material>Gazebo/Grey</material></gazebo>
+  <gazebo reference="platform"><material>Gazebo/Green</material></gazebo>
 
-  <gazebo reference="platform">
-    <material>Gazebo/Green</material>
-    <mu1>0.9</mu1>
-    <mu2>0.9</mu2>
-  </gazebo>
-
-  <gazebo reference="hydraulic_cylinder">
-    <material>Gazebo/Yellow</material>
-  </gazebo>
-
-  <gazebo reference="hydraulic_piston">
-    <material>Gazebo/Orange</material>
-  </gazebo>
-
-  <gazebo reference="cross_connector">
-    <material>Gazebo/Black</material>
-  </gazebo>
-
-  <!-- ROS2 Control transmission -->
+  <!-- ros2_control definition -->
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
     <joint name="hydraulic_actuator">
       <command_interface name="position">
-        <param name="min">0</param>
-        <param name="max">0.6</param>
+        <param name="min">-0.5</param>
+        <param name="max">0.5</param>
       </command_interface>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint>
-    <joint name="lower_left_joint">
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-    <joint name="lower_right_joint">
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
