@@ -3,6 +3,7 @@
 
   <!-- Include properties and macros -->
   <xacro:include filename="$(find scissor_lift_description)/urdf/scissor_lift_macros.xacro"/>
+  <link name="world"/>
 
   <!-- Parameters -->
   <xacro:property name="base_length" value="2.0"/>
