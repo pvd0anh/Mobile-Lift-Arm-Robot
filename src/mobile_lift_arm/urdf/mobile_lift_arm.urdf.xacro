@@ -15,17 +15,17 @@
   <!-- Arm mounted on lift_top_link -->
   <xacro:robot_arm parent="lift_top_link"/>
 
-  <!-- ros2_control definition - SỬA CHO ĐÚNG VỚI TRICYCLE -->
+  <!-- ros2_control definition -->
   <ros2_control name="mobile_lift_arm_system" type="system">
     <hardware>
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
 
-    <!-- Tricycle wheels - SỬA TÊN JOINTS -->
+    <!-- Mobile base wheels -->
     <joint name="front_wheel_joint">
       <command_interface name="velocity">
-        <param name="min">-20</param>
-        <param name="max">20</param>
+        <param name="min">-10</param>
+        <param name="max">10</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -33,8 +33,8 @@
 
     <joint name="left_rear_wheel_joint">
       <command_interface name="velocity">
-        <param name="min">-25</param>
-        <param name="max">25</param>
+        <param name="min">-10</param>
+        <param name="max">10</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -42,8 +42,8 @@
 
     <joint name="right_rear_wheel_joint">
       <command_interface name="velocity">
-        <param name="min">-25</param>
-        <param name="max">25</param>
+        <param name="min">-10</param>
+        <param name="max">10</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -52,8 +52,8 @@
     <!-- Steering joint -->
     <joint name="front_steer_joint">
       <command_interface name="position">
-        <param name="min">-1.0472</param>
-        <param name="max">1.0472</param>
+        <param name="min">-0.7854</param>
+        <param name="max">0.7854</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -69,11 +69,11 @@
       <state_interface name="velocity"/>
     </joint>
 
-    <!-- Arm joints - GIẢM EFFORT LIMIT -->
+    <!-- Arm joints -->
     <joint name="arm_shoulder_yaw_joint">
       <command_interface name="position">
-        <param name="min">-6.28</param>
-        <param name="max">6.28</param>
+        <param name="min">-3.14159</param>
+        <param name="max">3.14159</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -81,8 +81,8 @@
 
     <joint name="arm_shoulder_pitch_joint">
       <command_interface name="position">
-        <param name="min">-1.57</param>
-        <param name="max">1.57</param>
+        <param name="min">-1.5708</param>
+        <param name="max">1.5708</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -90,8 +90,8 @@
 
     <joint name="arm_shoulder_roll_joint">
       <command_interface name="position">
-        <param name="min">-1.57</param>
-        <param name="max">1.57</param>
+        <param name="min">-1.5708</param>
+        <param name="max">1.5708</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -99,8 +99,8 @@
 
     <joint name="arm_elbow_pitch_joint">
       <command_interface name="position">
-        <param name="min">-1.57</param>
-        <param name="max">1.57</param>
+        <param name="min">-1.5708</param>
+        <param name="max">1.5708</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -108,8 +108,8 @@
 
     <joint name="arm_wrist_pitch_joint">
       <command_interface name="position">
-        <param name="min">-3.14</param>
-        <param name="max">3.14</param>
+        <param name="min">-1.5708</param>
+        <param name="max">1.5708</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -117,8 +117,8 @@
 
     <joint name="arm_wrist_roll_joint">
       <command_interface name="position">
-        <param name="min">-6.28</param>
-        <param name="max">6.28</param>
+        <param name="min">-3.14159</param>
+        <param name="max">3.14159</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -131,4 +131,5 @@
       <parameters>$(find mobile_lift_arm)/config/ros2_controllers.yaml</parameters>
     </plugin>
   </gazebo>
+
 </robot>
